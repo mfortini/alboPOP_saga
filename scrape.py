@@ -1,4 +1,7 @@
-from lxml import html
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+from lxml import etree
 import requests
 import re
 import rssmanager as RSS
@@ -10,7 +13,7 @@ BASE_OUT_URL='http://opendata.matteofortini.it/rssAlboPOP/saga'
 DIRNAME='/var/www/opendata.matteofortini.it/rssAlboPOP/saga'
 
 def outputRSS(alboName,data,dirName):
-    rss=RSS.rssElaboraNuovi("alboPOP"+alboName,title='alboPOP di '+alboName,base_url=BASE_OUT_URL)
+    rss=RSS.rssElaboraNuovi("alboPOP"+alboName,title='alboPOP di '+alboName,url=BASE_OUT_URL+"/alboPOP"+alboName+".xml")
     for row in data:
         nReg=row[0]
         dataReg=row[1]
@@ -29,7 +32,7 @@ def outputRSS(alboName,data,dirName):
 
 def main():
     page = requests.get(SAGA_ORGS)
-    tree = html.fromstring(page.content)
+    tree = etree.HTML(page.content)
 
     links=tree.xpath('//td/a/@href')
 
@@ -40,7 +43,8 @@ def main():
         print l,nomealbo
         url=SAGA_BASE+l
         page = requests.get(url)
-        tree = html.fromstring(page.content)
+	myparser=etree.HTMLParser(encoding='utf-8')
+        tree = etree.HTML(page.content,parser=myparser)
 
         tables=tree.xpath('//table')
         if len(tables)>0:
@@ -52,7 +56,7 @@ def main():
                 datarow=[]
                 for cell in r.xpath('td'):
                     href=cell.xpath('a/@href')
-                    text=''.join(cell.xpath('.//text()')).strip()
+                    text=u''.join(cell.xpath('.//text()')).strip()
                     if len(href) > 0:
                         detailurl=SAGA_BASE+re.sub(r'jsessionid=\S*\?','?',href[0])
                         datarow.append(detailurl)
