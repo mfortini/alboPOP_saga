@@ -6,8 +6,8 @@ import time
 
 SAGA_BASE="http://pubblicazioni.saga.it"
 SAGA_ORGS=SAGA_BASE+"/orgs/"
-BASE_OUT_URL='opendata.matteofortini.it/rssAlboPOP/saga'
-DIRNAME='/var/www/opendata.matteofortini.it/rssAlboPOP'
+BASE_OUT_URL='http://opendata.matteofortini.it/rssAlboPOP/saga'
+DIRNAME='/var/www/opendata.matteofortini.it/rssAlboPOP/saga'
 
 def outputRSS(alboName,data,dirName):
     rss=RSS.rssElaboraNuovi("alboPOP"+alboName,title='alboPOP di '+alboName,base_url=BASE_OUT_URL)
@@ -23,8 +23,9 @@ def outputRSS(alboName,data,dirName):
         link=row[7].strip()
 
         rss.do_rss(nReg,dataReg, tipo, oggetto,link,inizioPub,finePub)
-
-    rss.out_rss(alboName+'.xml')
+    outputFileName=dirName+'/'+'alboPOP'+alboName+'.xml'
+    print "writing to",outputFileName
+    rss.out_rss(outputFileName)
 
 def main():
     page = requests.get(SAGA_ORGS)
