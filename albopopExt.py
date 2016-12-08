@@ -44,7 +44,7 @@ class AlbopopExtension(BaseExtension):
 		if self._categoryName:
 			newelem=etree.SubElement(channel,'category')
 			newelem.set('domain','http://albopop.it/specs#channel-category-name')
-			newelem.text='Comune di ' + self._categoryName
+			newelem.text=self._categoryName
 
 	def categoryName(self,name=None):
 		self._categoryName=name

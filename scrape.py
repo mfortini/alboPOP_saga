@@ -27,7 +27,7 @@ if len(BASE_OUT_URL) == 0 or len(DIRNAME) == 0:
 def outputRSS(alboName,data,dirName):
     rssName="alboPOP - Comune - " + alboName.title()
     rssTitle="*non ufficiale* RSS feed dell'Albo Pretorio del Comune di " + alboName.title()
-    rss=RSS.rssElaboraNuovi(name=rssName,title=rssTitle,url=BASE_OUT_URL+"/alboPOP"+alboName+".xml")
+    rss=RSS.rssElaboraNuovi(name=rssName,title=rssTitle,url=BASE_OUT_URL+"/alboPOP"+alboName+".xml",categoryType="Comune",categoryName="Comune di "+alboName.title())
     for row in data:
         nReg=row[0]
         dataReg=row[1]
