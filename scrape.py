@@ -6,14 +6,28 @@ import requests
 import re
 import rssmanager as RSS
 import time
+import sys
+
+from ConfigParser import ConfigParser
+
+
+cp=ConfigParser()
+cp.read('alboPretorio.cfg')
+
+BASE_OUT_URL=cp.get('settings', 'ALBO_BASE_URL')
+DIRNAME=cp.get('settings', 'FILES_BASE_PATH')
 
 SAGA_BASE="http://pubblicazioni.saga.it"
 SAGA_ORGS=SAGA_BASE+"/orgs/"
-BASE_OUT_URL='http://opendata.matteofortini.it/rssAlboPOP/saga'
-DIRNAME='/var/www/opendata.matteofortini.it/rssAlboPOP/saga'
+
+if len(BASE_OUT_URL) == 0 or len(DIRNAME) == 0:
+	print "ERROR SETTINGS"
+	sys.exit(1)
 
 def outputRSS(alboName,data,dirName):
-    rss=RSS.rssElaboraNuovi("alboPOP"+alboName,title='alboPOP di '+alboName,url=BASE_OUT_URL+"/alboPOP"+alboName+".xml")
+    rssName="alboPOP - Comune - " + alboName.title()
+    rssTitle="*non ufficiale* RSS feed dell'Albo Pretorio del Comune di " + alboName.title()
+    rss=RSS.rssElaboraNuovi(name=rssName,title=rssTitle,url=BASE_OUT_URL+"/alboPOP"+alboName+".xml")
     for row in data:
         nReg=row[0]
         dataReg=row[1]
